@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ku">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MR_LEKOLAR</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="home" id="home">
+  <h1>MR_LEKOLAR</h1>
+  <p>بەخێربێیت، لێکۆڵەر 🕵️‍♂️</p>
+  <button onclick="startGame()">دەستپێکردنی یاری</button>
+</div>
+
+<div class="account" id="account">
+  <h2>دروستکردنی ئەکاونت</h2>
+
+  <input type="text" id="playerName" placeholder="ناوی لێکۆڵەر">
+
+  <input type="password" id="playerPassword" placeholder="وشەی نهێنی">
+
+  <button onclick="createAccount()">دروستکردن</button>
+</div>
+
+<div class="cases" id="cases">
+
+  <h1>📁 دۆسیەکان</h1>
+
+  <p id="welcomeText"></p>
+
+  <div class="stats">
+    <p>⭐ XP: <span id="xp">0</span></p>
+    <p>🎖️ پلە: <span id="rank">نوێکار</span></p>
+  </div>
+
+  <div class="case-card">
+    <h2>🔎 دۆسیەی یەکەم</h2>
+
+    <p>
+      مۆبایلێک لە ماڵێک ون بووە.
+      سێ کەس گومانلێکراون.
+    </p>
+
+    <button onclick="openCase()">
+      دەستکردن بە لێکۆڵینەوە
+    </button>
+  </div>
+
+</div>
+
+<div class="case-page" id="casePage">
+
+  <h1>🔎 دۆسیەی یەکەم</h1>
+
+  <h2>مۆبایلە ونبووەکە</h2>
+
+  <div class="story">
+    <p>
+      لە ماڵێک مۆبایلێکی گرنگ ون بووە.
+      لە کاتی ونبوونی مۆبایلەکە،
+      تەنها سێ کەس لە نزیک ماڵەکە بوون.
+    </p>
+  </div>
+
+  <h2>📋 گومانلێکراوەکان</h2>
+
+  <div class="suspects">
+
+    <div class="suspect">
+      <h3>👤 ئارام</h3>
+      <p>دەڵێت لە ژوورەکەدا نەبووە.</p>
+    </div>
+
+    <div class="suspect">
+      <h3>👤 کاروان</h3>
+      <p>دەڵێت لە دەرەوە بووە.</p>
+    </div>
+
+    <div class="suspect">
+      <h3>👤 سامان</h3>
+      <p>دەڵێت هیچ شتێکی نەبینیوە.</p>
+    </div>
+
+  </div>
+
+  <h2>🧩 بەڵگەکان</h2>
+
+  <div class="clues">
+
+    <button onclick="showClue(1)">بەڵگەی ١</button>
+
+    <button onclick="showClue(2)">بەڵگەی ٢</button>
+
+    <button onclick="showClue(3)">بەڵگەی ٣</button>
+
+  </div>
+
+  <p class="clue-text" id="clueText">
+    بەڵگەیەک هەڵبژێرە.
+  </p>
+
+  <h2>❓ تاوانبار کێیە؟</h2>
+
+  <div class="answers">
+
+    <button onclick="solveCase('aram')">ئارام</button>
+
+    <button onclick="solveCase('karwan')">کاروان</button>
+
+    <button onclick="solveCase('saman')">سامان</button>
+
+  </div>
+
+  <button class="back-button" onclick="backToCases()">
+    ← گەڕانەوە بۆ دۆسیەکان
+  </button>
+
+</div>
+
+<div class="result-page" id="resultPage">
+
+  <h1 id="resultTitle"></h1>
+
+  <p id="resultText"></p>
+
+  <div class="result-stats">
+    <p>⭐ XP: <span id="finalXP">0</span></p>
+    <p>🎖️ پلە: <span id="finalRank">نوێکار</span></p>
+  </div>
+
+  <button onclick="backToCases()">
+    گەڕانەوە بۆ دۆسیەکان
+  </button>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
