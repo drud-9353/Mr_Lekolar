@@ -56,7 +56,6 @@ function createAccount() {
 
 localStorage.setItem("playerName", playerName);
 localStorage.setItem("playerXP", playerXP);
-alert(localStorage.getItem("playerName"));
 
   document.getElementById("account").style.display = "none";
 
