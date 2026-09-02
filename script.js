@@ -247,6 +247,12 @@ function openProfile() {
 
   document.getElementById("newPlayerName").value = playerName;
 
+  const savedImage = localStorage.getItem("profileImage");
+
+  if (savedImage) {
+    document.getElementById("profilePreview").src = savedImage;
+  }
+
 }
 
 
@@ -302,3 +308,26 @@ function logout() {
   document.getElementById("home").style.display = "flex";
 
 }
+/* PROFILE IMAGE */
+
+document.getElementById("profileImage").addEventListener("change", function(event) {
+
+  const file = event.target.files[0];
+
+  if (!file) return;
+
+  const reader = new FileReader();
+
+  reader.onload = function(e) {
+
+    const imageData = e.target.result;
+
+    localStorage.setItem("profileImage", imageData);
+
+    document.getElementById("profilePreview").src = imageData;
+
+  };
+
+  reader.readAsDataURL(file);
+
+});
