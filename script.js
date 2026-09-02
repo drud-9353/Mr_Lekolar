@@ -1,17 +1,18 @@
-let playerName = "";
-let playerXP = 0;
-
-
-/* START GAME */
+let playerName = localStorage.getItem("playerName") || "";
+let playerXP = Number(localStorage.getItem("playerXP")) || 0;
 
 function startGame() {
 
   document.getElementById("home").style.display = "none";
+  document.getElementById("account").style.display = "none";
+  document.getElementById("cases").style.display = "flex";
 
-  document.getElementById("account").style.display = "flex";
+  document.getElementById("welcomeText").innerText =
+    "بەخێربێیت، لێکۆڵەر " + playerName + " 🕵️‍♂️";
+
+  updatePlayerStats();
 
 }
-
 
 /* CREATE ACCOUNT */
 
@@ -44,6 +45,9 @@ function createAccount() {
 
   playerName = name;
 
+localStorage.setItem("playerName", playerName);
+localStorage.setItem("playerXP", playerXP);
+alert(localStorage.getItem("playerName"));
 
   document.getElementById("account").style.display = "none";
 
@@ -165,6 +169,7 @@ function solveCase(answer) {
   if (answer === "karwan") {
 
     playerXP += 100;
+localStorage.setItem("playerXP", playerXP);
 
 
     document.getElementById("casePage").style.display =
