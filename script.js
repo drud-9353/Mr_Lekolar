@@ -238,3 +238,67 @@ function backToCases() {
   updatePlayerStats();
 
 }
+/* PROFILE */
+
+function openProfile() {
+
+  document.getElementById("cases").style.display = "none";
+  document.getElementById("profilePage").style.display = "flex";
+
+  document.getElementById("newPlayerName").value = playerName;
+
+}
+
+
+function closeProfile() {
+
+  document.getElementById("profilePage").style.display = "none";
+  document.getElementById("cases").style.display = "flex";
+
+}
+
+
+function saveProfile() {
+
+  const newName =
+    document.getElementById("newPlayerName").value.trim();
+
+
+  if (newName === "") {
+
+    alert("تکایە ناوێک بنووسە");
+
+    return;
+
+  }
+
+
+  playerName = newName;
+
+  localStorage.setItem("playerName", playerName);
+
+
+  document.getElementById("welcomeText").innerText =
+    "بەخێربێیت، لێکۆڵەر " + playerName + " 🕵️‍♂️";
+
+
+  alert("✅ پرۆفایلەکەت پاشەکەوت کرا");
+
+}
+
+
+/* LOGOUT */
+
+function logout() {
+
+  localStorage.removeItem("playerName");
+  localStorage.removeItem("playerXP");
+
+  playerName = "";
+  playerXP = 0;
+
+
+  document.getElementById("cases").style.display = "none";
+  document.getElementById("home").style.display = "flex";
+
+}
