@@ -51,6 +51,28 @@
       دەستکردن بە لێکۆڵینەوە
     </button>
   </div>
+  <div class="case-card locked-case" id="case2" data-case="2">
+
+  <h2>🔒 دۆسیەی دووەم</h2>
+
+  <p>ئەم دۆسیەیە هێشتا قفڵە.</p>
+
+  <button onclick="openCase2()">
+    🔒 قفڵە
+  </button>
+
+</div>
+<div class="case-card locked-case" id="case3" data-case="3">
+
+  <h2>🔒 دۆسیەی سێیەم</h2>
+
+  <p>ئەم دۆسیەیە هێشتا قفڵە.</p>
+
+  <button onclick="openCase3()">
+    🔒 قفڵە
+  </button>
+
+</div>
 
 </div>
 
@@ -122,7 +144,162 @@
   </button>
 
 </div>
+<div class="case-page" id="case2Page">
 
+  <h1>🔎 دۆسیەی دووەم</h1>
+
+  <h2>💎 دۆسیەی ونبوونی زێڕەکە</h2>
+
+<div class="story">
+  <p>
+    لە شەوێکی بارانیدا، زێڕێکی بە نرخ لە ماڵی بازرگانێکی ناسراو ون بووە.
+    دەرگای ماڵەکە داخراو بوو و هیچ نیشانەی شکاندنی دەرگا نەبوو.
+  </p>
+
+  <p>
+    لەو شەوەدا تەنها سێ کەس لە ماڵەکە بوون:
+    ئاراس، دیلان و هێمن.
+  </p>
+</div>
+
+<h2>📋 گومانلێکراوەکان</h2>
+
+<div class="suspects">
+
+  <div class="suspect">
+    <h3>👤 ئاراس</h3>
+    <p>دەڵێت لە ژووری خۆی بووە و هیچ نەبینیوە.</p>
+  </div>
+
+  <div class="suspect">
+    <h3>👤 دیلان</h3>
+    <p>دەڵێت لە ئاشپەزخانە بووە و دەستی بە هیچ شتێک نەگەیشتووە.</p>
+  </div>
+
+  <div class="suspect">
+    <h3>👤 هێمن</h3>
+    <p>دەڵێت لە حەوشە بووە و تاوانبارەکەی نەدیوە.</p>
+  </div>
+
+</div>
+<h2>🧩 بەڵگەکان</h2>
+
+<div class="clues">
+
+  <button onclick="showCase2Clue(1)">بەڵگەی ١</button>
+
+  <button onclick="showCase2Clue(2)">بەڵگەی ٢</button>
+
+  <button onclick="showCase2Clue(3)">بەڵگەی ٣</button>
+
+  <button onclick="showCase2Clue(4)">بەڵگەی ٤</button>
+
+</div>
+
+<p class="clue-text" id="case2ClueText">
+  بەڵگەیەک هەڵبژێرە.
+</p>
+<h2>❓ تاوانبار کێیە؟</h2>
+
+<div class="answers">
+
+  <button onclick="solveCase2('aras')">
+    ئاراس
+  </button>
+
+  <button onclick="solveCase2('dilan')">
+    دیلان
+  </button>
+
+  <button onclick="solveCase2('hemin')">
+    هێمن
+  </button>
+
+</div>
+
+  <button class="back-button" onclick="backToCases()">
+    ← گەڕانەوە بۆ دۆسیەکان
+  </button>
+<div>
+  <div class="case-page" id="case3Page">
+
+  <h1>🔎 دۆسیەی سێیەم</h1>
+
+  <h2>💍 دۆسیەی ونبوونی ئەڵماسەکە</h2>
+
+  <div class="story">
+
+    <p>
+      ئەڵماسێکی زۆر بە نرخ لە شوێنێکی تایبەت ون بووە.
+      دەرگا داخراوە و هیچ نیشانەی شکاندن نییە.
+    </p>
+
+    <p>
+      لە کاتی ونبوونی ئەڵماسەکەدا تەنها سێ کەس لە شوێنەکە بوون:
+      سارا، ناز و رێباز.
+    </p>
+
+  </div>
+
+  <h2>📋 گومانلێکراوەکان</h2>
+
+  <div class="suspects">
+
+    <div class="suspect">
+      <h3>👤 سارا</h3>
+      <p>دەڵێت لە ژووری میوان بووە.</p>
+    </div>
+
+    <div class="suspect">
+      <h3>👤 ناز</h3>
+      <p>دەڵێت لە کۆگا بووە.</p>
+    </div>
+
+    <div class="suspect">
+      <h3>👤 رێباز</h3>
+      <p>دەڵێت لە دەرەوەی بیناکە بووە.</p>
+    </div>
+
+  </div>
+
+  <h2>🧩 بەڵگەکان</h2>
+
+  <div class="clues">
+
+    <button onclick="showCase3Clue(1)">بەڵگەی ١</button>
+    <button onclick="showCase3Clue(2)">بەڵگەی ٢</button>
+    <button onclick="showCase3Clue(3)">بەڵگەی ٣</button>
+    <button onclick="showCase3Clue(4)">بەڵگەی ٤</button>
+
+  </div>
+
+  <p class="clue-text" id="case3ClueText">
+    بەڵگەیەک هەڵبژێرە.
+  </p>
+
+  <h2>❓ تاوانبار کێیە؟</h2>
+
+  <div class="answers">
+
+    <button onclick="solveCase3('sara')">
+      سارا
+    </button>
+
+    <button onclick="solveCase3('naz')">
+      ناز
+    </button>
+
+    <button onclick="solveCase3('rebaz')">
+      رێباز
+    </button>
+
+  </div>
+
+  <button class="back-button" onclick="backToCases()">
+    ← گەڕانەوە بۆ دۆسیەکان
+  </button>
+
+</div>
 <div class="result-page" id="resultPage">
 
   <h1 id="resultTitle"></h1>
@@ -139,11 +316,37 @@
   </button>
 
 </div>
+<div class="judge-page" id="judgePage">
+
+  <h1>⚖️ دادوەر</h1>
+
+  <p id="judgeText"></p>
+
+  <p>💰 Points: <span id="judgePoints">0</span></p>
+
+  <button onclick="backToCases()">
+    گەڕانەوە بۆ دۆسیەکان
+  </button>
+
+</div>
 <div class="profile-page" id="profilePage">
   <input type="file" id="profileImage" accept="image/*">
   <img id="profilePreview" src="" alt="Profile Picture" style="width:120px;height:120px;border-radius:50%;object-fit:cover;">
 
   <h1>👤 پرۆفایلی لێکۆڵەر</h1>
+  <div class="profile-stats">
+
+  <p>👤 ناو: <span id="profileName"></span></p>
+
+  <p>⭐ XP: <span id="profileXP">0</span></p>
+
+  <p>💰 Points: <span id="profilePoints">0</span></p>
+
+  <p>🎖️ پلە: <span id="profileRank">نوێکار</span></p>
+
+  <p>📁 دۆسیە چارەسەرکراوەکان: <span id="solvedCases">0</span></p>
+
+</div>
 
   <input
     type="text"
