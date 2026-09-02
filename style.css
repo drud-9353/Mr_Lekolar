@@ -323,3 +323,11 @@ button:active {
 
   border-radius: 15px;
 }
+.profile-page {
+  display: none;
+  min-height: 100vh;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 15px;
+}
