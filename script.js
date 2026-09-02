@@ -4,14 +4,23 @@ let playerXP = Number(localStorage.getItem("playerXP")) || 0;
 function startGame() {
 
   document.getElementById("home").style.display = "none";
-  document.getElementById("account").style.display = "none";
-  document.getElementById("cases").style.display = "flex";
 
-  document.getElementById("welcomeText").innerText =
-    "بەخێربێیت، لێکۆڵەر " + playerName + " 🕵️‍♂️";
+  if (playerName === "") {
 
-  updatePlayerStats();
+    document.getElementById("account").style.display = "flex";
+    document.getElementById("cases").style.display = "none";
 
+  } else {
+
+    document.getElementById("account").style.display = "none";
+    document.getElementById("cases").style.display = "flex";
+
+    document.getElementById("welcomeText").innerText =
+      "بەخێربێیت، لێکۆڵەر " + playerName + " 🕵️‍♂️";
+
+    updatePlayerStats();
+
+  }
 }
 
 /* CREATE ACCOUNT */
