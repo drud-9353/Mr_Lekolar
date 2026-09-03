@@ -2,603 +2,608 @@ let playerName = localStorage.getItem("playerName") || "";
 let playerXP = Number(localStorage.getItem("playerXP")) || 0;
 let playerPoints = Number(localStorage.getItem("playerPoints")) || 0;
 let solvedCases = Number(localStorage.getItem("solvedCases")) || 0;
-let case1Solved = localStorage.getItem("case1Solved") === "true";
-let case2Solved = localStorage.getItem("case2Solved") === "true";
-let case3Solved = localStorage.getItem("case3Solved") === "true";
+
+let caseSolved = JSON.parse(
+  localStorage.getItem("caseSolved") || "{}"
+);
+
+let currentCase = null;
+
+const cases = [
+  {
+    id: 1,
+    title: "دۆسیەی ژووری داخراو",
+    story:
+      "لە شەوێکی تاریکدا کەسێک لە ژوورێکی داخراو دۆزرایەوە. هیچ نیشانەیەک لە شکاندنی دەرگا نەبوو. تۆ وەک لێکۆڵەر دەبێت ڕاستییەکە بدۆزیتەوە.",
+    suspects: [
+      "کاروان — هاوڕێی نزیکی قوربانی",
+      "ئاراس — پاسەوانی بیناکە",
+      "سارا — دراوسێی قوربانی"
+    ],
+    clues: [
+      "دەرگاکە لە ناوەوە داخراو بوو.",
+      "لەسەر مێزەکە کلیلێکی زیوین دۆزرایەوە.",
+      "کامێرای چاودێری لە کاتی ڕووداوەکە کوژابوو."
+    ],
+    answer: "کاروان"
+  },
+
+  {
+    id: 2,
+    title: "دۆسیەی نامەی ونبوو",
+    story:
+      "نامەیەکی گرنگ لە ئۆفیسێک ون بووە. تەنها سێ کەس لە کاتی ونبوونی نامەکەدا لە شوێنەکە بوون.",
+    suspects: [
+      "ئاراس — کارمەندی ئۆفیس",
+      "سارا — سکرتێر",
+      "کاروان — میوان"
+    ],
+    clues: [
+      "نامەکە لە کشووی داخراو بوو.",
+      "کلیلەکە تەنها لەلایەن ساراوە بوو.",
+      "کامێرا پیشانی دا سارا لە نزیک کشووکە بوو."
+    ],
+    answer: "سارا"
+  },
+
+  {
+    id: 3,
+    title: "دۆسیەی مۆبایلە ونبووەکە",
+    story:
+      "مۆبایلێکی گرنگ لە کافێیەک ون بووە. هەموو کەسێک دەڵێت هیچ شتێکی نەدزراوە.",
+    suspects: [
+      "سارا — دانیشتووی نزیک",
+      "ئاراس — خاوەنی کافێ",
+      "کاروان — کڕیار"
+    ],
+    clues: [
+      "مۆبایلەکە لەسەر مێزێکی دوور دۆزرایەوە.",
+      "کاروان وتی هیچ کاتێک لە مێزەکە نزیک نەبووە.",
+      "کامێرا نیشانی دا کاروان بۆ ماوەیەک لەوێ بووە."
+    ],
+    answer: "کاروان"
+  }
+];
+
+/* ---------------- BASIC PAGES ---------------- */
+
+function hideAllPages() {
+  document.querySelectorAll(".page").forEach(function(page) {
+    page.style.display = "none";
+  });
+}
 
 function startGame() {
 
-  document.getElementById("home").style.display = "none";
+  hideAllPages();
 
-  if (playerName === "") {
-
-    document.getElementById("account").style.display = "flex";
-    document.getElementById("cases").style.display = "none";
-
+  if (!playerName) {
+    document.getElementById("accountPage").style.display = "flex";
   } else {
-
-    document.getElementById("account").style.display = "none";
     document.getElementById("cases").style.display = "flex";
 
     document.getElementById("welcomeText").innerText =
-      "بەخێربێیت، لێکۆڵەر " + playerName + " 🕵️‍♂️";
+      "بەخێربێیت " + playerName + " 🕵️‍♂️";
 
     updatePlayerStats();
-    updateCaseLocks();
-
+    renderCases();
   }
 }
 
-/* CREATE ACCOUNT */
+/* ---------------- ACCOUNT ---------------- */
 
 function createAccount() {
 
   const name =
-    document.getElementById("playerName").value;
+    document.getElementById("accountName").value.trim();
 
   const password =
-    document.getElementById("playerPassword").value;
+    document.getElementById("accountPassword").value;
 
-
-  if (name.trim() === "") {
-
-    alert("تکایە ناوی لێکۆڵەر بنووسە");
-
+  if (!name || !password) {
+    alert("تکایە ناو و وشەی نهێنی بنووسە.");
     return;
-
   }
-
-
-  if (password.trim() === "") {
-
-    alert("تکایە وشەی نهێنی بنووسە");
-
-    return;
-
-  }
-
 
   playerName = name;
 
-localStorage.setItem("playerName", playerName);
-localStorage.setItem("playerXP", playerXP);
+  localStorage.setItem("playerName", playerName);
+  localStorage.setItem("playerPassword", password);
 
-  document.getElementById("account").style.display = "none";
+  hideAllPages();
 
   document.getElementById("cases").style.display = "flex";
 
-
   document.getElementById("welcomeText").innerText =
-    "بەخێربێیت، لێکۆڵەر " + playerName + " 🕵️‍♂️";
-
+    "بەخێربێیت " + playerName + " 🕵️‍♂️";
 
   updatePlayerStats();
-  updateCaseLocks();
-
+  renderCases();
 }
 
+/* ---------------- STATS ---------------- */
 
-/* UPDATE STATS */
+function getRank() {
+
+  if (playerXP < 100) return "نوێکار";
+  if (playerXP < 300) return "ملازم";
+  if (playerXP < 600) return "کاپتن";
+  if (playerXP < 1000) return "عقید";
+
+  return "سەرلێکۆڵەر 🕵️‍♂️";
+}
 
 function updatePlayerStats() {
 
-  document.getElementById("xp").innerText =
-    playerXP;
-
-
-  document.getElementById("rank").innerText =
-    getRank();
-
-}
-function updateCaseLocks() {
-
-  const caseCards = document.querySelectorAll("[data-case]");
-
-  caseCards.forEach(function(caseCard) {
-
-    const caseNumber = Number(caseCard.dataset.case);
-    const button = caseCard.querySelector("button");
-
-    if (solvedCases >= caseNumber - 1) {
-
-      caseCard.classList.remove("locked-case");
-
-      button.innerText =
-        "دەستکردن بە لێکۆڵینەوە";
-
-      if (caseNumber === 2) {
-  button.onclick = openCase2;
+  document.getElementById("xp").innerText = playerXP;
+  document.getElementById("points").innerText = playerPoints;
+  document.getElementById("rank").innerText = getRank();
 }
 
-if (caseNumber === 3) {
-  button.onclick = openCase3;
-}
+/* ---------------- CASES ---------------- */
+
+function renderCases() {
+
+  const list = document.getElementById("caseList");
+
+  list.innerHTML = "";
+
+  cases.forEach(function(gameCase) {
+
+    const card = document.createElement("div");
+
+    card.className = "case-card";
+
+    const unlocked =
+      gameCase.id === 1 ||
+      solvedCases >= gameCase.id - 1;
+
+    card.innerHTML = `
+      <h2>🔎 دۆسیەی ${gameCase.id}</h2>
+      <p>${gameCase.title}</p>
+      <button>
+        ${unlocked ? "دەستکردن بە لێکۆڵینەوە" : "🔒 قفڵە"}
+      </button>
+    `;
+
+    const button = card.querySelector("button");
+
+    if (unlocked) {
+
+      button.onclick = function() {
+        openCase(gameCase.id);
+      };
 
     } else {
-
-      caseCard.classList.add("locked-case");
-
-      button.innerText = "🔒 قفڵە";
 
       button.onclick = function() {
 
         alert(
           "🔒 سەرەتا دۆسیەی " +
-          (caseNumber - 1) +
+          (gameCase.id - 1) +
           " چارەسەر بکە!"
         );
 
       };
 
+      card.classList.add("locked-case");
     }
 
+    list.appendChild(card);
   });
-
 }
 
+/* ---------------- OPEN CASE ---------------- */
 
-/* GET RANK */
+function openCase(caseId) {
 
-function getRank() {
+  currentCase =
+    cases.find(function(item) {
+      return item.id === caseId;
+    });
 
-  if (playerXP < 100) {
+  if (!currentCase) return;
 
-    return "نوێکار";
-
-  }
-
-
-  if (playerXP < 300) {
-
-    return "ملازم";
-
-  }
-
-
-  if (playerXP < 600) {
-
-    return "کاپتن";
-
-  }
-
-
-  if (playerXP < 1000) {
-
-    return "عقید";
-
-  }
-
-
-  return "سەرلێکۆڵەر 🕵️‍♂️";
-
-}
-
-
-/* OPEN CASE */
-
-function openCase() {
-
-  document.getElementById("cases").style.display = "none";
+  hideAllPages();
 
   document.getElementById("casePage").style.display = "flex";
 
+  document.getElementById("caseTitle").innerText =
+    "🔎 " + currentCase.title;
+
+  document.getElementById("caseStory").innerText =
+    currentCase.story;
+
+  renderSuspects();
+  renderClues();
+  renderAnswers();
 }
 
+/* ---------------- SUSPECTS ---------------- */
 
-/* SHOW CLUES */
+function renderSuspects() {
 
-function showClue(number) {
+  const list =
+    document.getElementById("suspectList");
 
-  const clueText =
-    document.getElementById("clueText");
+  list.innerHTML = "";
 
+  currentCase.suspects.forEach(function(suspect) {
 
-  if (number === 1) {
+    const div = document.createElement("div");
 
-    clueText.innerText =
-      "🔎 بەڵگەی ١: لەسەر شوێنی تاوان پێی پێیەک دۆزرایەوە.";
+    div.className = "suspect";
 
+    div.innerText = "👤 " + suspect;
 
-  }
-
-
-  if (number === 2) {
-
-    clueText.innerText =
-      "📱 بەڵگەی ٢: کاروان دەڵێت لە دەرەوە بووە، بەڵام کەسێک بینیویەتی لە نزیک ژوورەکە.";
-
-
-  }
-
-
-  if (number === 3) {
-
-    clueText.innerText =
-      "🧩 بەڵگەی ٣: لە مۆبایلەکە پەنجەمۆری کاروان دۆزرایەوە.";
-
-  }
-
+    list.appendChild(div);
+  });
 }
 
+/* ---------------- CLUES ---------------- */
 
-/* SOLVE CASE */
+function renderClues() {
+
+  const list =
+    document.getElementById("clueList");
+
+  list.innerHTML = "";
+
+  currentCase.clues.forEach(function(clue, index) {
+
+    const wrapper =
+      document.createElement("div");
+
+    const title =
+      document.createElement("div");
+
+    const text =
+      document.createElement("div");
+
+    title.className = "clue";
+    text.className = "clue-text";
+
+    title.innerText =
+      "🔍 بەڵگەی " + (index + 1);
+
+    text.innerText = clue;
+
+    title.onclick = function() {
+
+      if (text.style.display === "block") {
+        text.style.display = "none";
+      } else {
+        text.style.display = "block";
+      }
+
+    };
+
+    wrapper.appendChild(title);
+    wrapper.appendChild(text);
+
+    list.appendChild(wrapper);
+  });
+}
+
+/* ---------------- ANSWERS ---------------- */
+
+function renderAnswers() {
+
+  const list =
+    document.getElementById("answerList");
+
+  list.innerHTML = "";
+
+  currentCase.suspects.forEach(function(suspect) {
+
+    const name =
+      suspect.split(" — ")[0];
+
+    const button =
+      document.createElement("button");
+
+    button.className = "answer-button";
+
+    button.innerText = name;
+
+    button.onclick = function() {
+      solveCase(name);
+    };
+
+    list.appendChild(button);
+  });
+}
+
+/* ---------------- SOLVE CASE ---------------- */
 
 function solveCase(answer) {
 
+  if (!currentCase) return;
 
-if (answer === "karwan") {
+  if (answer === currentCase.answer) {
 
-  if (!case1Solved) {
+    if (!caseSolved[currentCase.id]) {
 
-    case1Solved = true;
-    localStorage.setItem("case1Solved", "true");
+      caseSolved[currentCase.id] = true;
 
-    solvedCases = 1;
-    localStorage.setItem("solvedCases", solvedCases);
+      localStorage.setItem(
+        "caseSolved",
+        JSON.stringify(caseSolved)
+      );
 
-    playerPoints += 100;
-    localStorage.setItem("playerPoints", playerPoints);
+      solvedCases = Math.max(
+        solvedCases,
+        currentCase.id
+      );
 
-    playerXP += 100;
-    localStorage.setItem("playerXP", playerXP);
+      localStorage.setItem(
+        "solvedCases",
+        solvedCases
+      );
 
-  }
+      playerXP += 100;
+      playerPoints += 100;
 
-  updateCaseLocks();
+      localStorage.setItem(
+        "playerXP",
+        playerXP
+      );
 
+      localStorage.setItem(
+        "playerPoints",
+        playerPoints
+      );
+    }
 
-    document.getElementById("casePage").style.display =
-      "none";
+    hideAllPages();
 
+    document.getElementById("resultPage")
+      .style.display = "flex";
 
-    document.getElementById("resultPage").style.display =
-      "flex";
-
-
-    document.getElementById("resultTitle").innerText =
+    document.getElementById("resultTitle")
+      .innerText =
       "🎉 دۆسیەکە چارەسەر کرا!";
 
-
-    document.getElementById("resultText").innerText =
+    document.getElementById("resultText")
+      .innerText =
       "پیرۆزە گەورەم بۆ چارەسەر کردنی دۆسیەکە 🫡🎉";
 
+    document.getElementById("finalXP")
+      .innerText = playerXP;
 
-    document.getElementById("finalXP").innerText =
-      playerXP;
+    document.getElementById("finalPoints")
+      .innerText = playerPoints;
 
-
-    document.getElementById("finalRank").innerText =
-      getRank();
-
+    document.getElementById("finalRank")
+      .innerText = getRank();
 
     updatePlayerStats();
 
-
   } else {
 
-  playerPoints -= 50;
+    playerPoints -= 50;
 
-  if (playerPoints < 0) {
-    playerPoints = 0;
+    if (playerPoints < 0) {
+      playerPoints = 0;
+    }
+
+    localStorage.setItem(
+      "playerPoints",
+      playerPoints
+    );
+
+    hideAllPages();
+
+    document.getElementById("judgePage")
+      .style.display = "flex";
+
+    document.getElementById("judgeText")
+      .innerText =
+      "❌ وەڵامەکەت هەڵەیە!\nدادوەر بڕیاری دا 50 Points لێت کەم بکرێت. ⚖️";
+
+    document.getElementById("judgePoints")
+      .innerText = playerPoints;
   }
-
-  localStorage.setItem("playerPoints", playerPoints);
-
-  document.getElementById("casePage").style.display = "none";
-  document.getElementById("judgePage").style.display = "flex";
-
-  document.getElementById("judgeText").innerText =
-    "❌ وەڵامەکەت هەڵەیە!\nدادوەر بڕیاری دا 50 Points لێت کەم بکرێت. ⚖️";
-
-  document.getElementById("judgePoints").innerText =
-    playerPoints;
-
 }
 
-}
-
-
-/* BACK TO CASES */
+/* ---------------- BACK ---------------- */
 
 function backToCases() {
 
-  document.getElementById("casePage").style.display =
-    "none";
+  hideAllPages();
 
-  document.getElementById("resultPage").style.display =
-    "none";
-
-  document.getElementById("judgePage").style.display =
-    "none";
-
-  document.getElementById("cases").style.display =
-    "flex";
-
-    document.getElementById("case2Page").style.display = "none";
-document.getElementById("case3Page").style.display = "none";
+  document.getElementById("cases")
+    .style.display = "flex";
 
   updatePlayerStats();
-  updateCaseLocks();
-
+  renderCases();
 }
-/* PROFILE */
+
+/* ---------------- PROFILE ---------------- */
 
 function openProfile() {
 
-  document.getElementById("cases").style.display = "none";
-  document.getElementById("profilePage").style.display = "flex";
+  hideAllPages();
 
-  document.getElementById("newPlayerName").value = playerName;
-  document.getElementById("profileName").innerText = playerName;
-document.getElementById("profileXP").innerText = playerXP;
-document.getElementById("profilePoints").innerText = playerPoints;
-document.getElementById("solvedCases").innerText = solvedCases;
-document.getElementById("profileRank").innerText = getRank();
+  document.getElementById("profilePage")
+    .style.display = "flex";
 
-  const savedImage = localStorage.getItem("profileImage");
+  document.getElementById("profileNameInput")
+    .value = playerName;
+
+  document.getElementById("profileXP")
+    .innerText = playerXP;
+
+  document.getElementById("profilePoints")
+    .innerText = playerPoints;
+
+  document.getElementById("profileRank")
+    .innerText = getRank();
+
+  document.getElementById("profileSolved")
+    .innerText = solvedCases;
+
+  const savedImage =
+    localStorage.getItem("profileImage");
 
   if (savedImage) {
-    document.getElementById("profilePreview").src = savedImage;
+
+    document.getElementById("profileImage")
+      .src = savedImage;
+
+  } else {
+
+    document.getElementById("profileImage")
+      .src =
+      "https://via.placeholder.com/150/333333/ffffff?text=🕵️";
   }
-
 }
-
 
 function closeProfile() {
 
-  document.getElementById("profilePage").style.display = "none";
-  document.getElementById("cases").style.display = "flex";
+  hideAllPages();
+
+  document.getElementById("cases")
+    .style.display = "flex";
+
   updatePlayerStats();
-
+  renderCases();
 }
-
 
 function saveProfile() {
 
   const newName =
-    document.getElementById("newPlayerName").value.trim();
+    document.getElementById("profileNameInput")
+      .value.trim();
 
-
-  if (newName === "") {
-
-    alert("تکایە ناوێک بنووسە");
-
+  if (!newName) {
+    alert("تکایە ناو بنووسە.");
     return;
-
   }
-
 
   playerName = newName;
 
-  localStorage.setItem("playerName", playerName);
+  localStorage.setItem(
+    "playerName",
+    playerName
+  );
 
+  document.getElementById("welcomeText")
+    .innerText =
+    "بەخێربێیت " + playerName + " 🕵️‍♂️";
 
-  document.getElementById("welcomeText").innerText =
-    "بەخێربێیت، لێکۆڵەر " + playerName + " 🕵️‍♂️";
+  alert("✅ Profile ـەکەت Save کرا.");
 
-
-  alert("✅ پرۆفایلەکەت پاشەکەوت کرا");
-
+  closeProfile();
 }
 
+/* ---------------- PROFILE IMAGE ---------------- */
 
-/* LOGOUT */
+document.addEventListener("DOMContentLoaded", function() {
+
+  const input =
+    document.getElementById("profileImageInput");
+
+  if (input) {
+
+    input.addEventListener(
+      "change",
+      function(event) {
+
+        const file =
+          event.target.files[0];
+
+        if (!file) return;
+
+        const reader =
+          new FileReader();
+
+        reader.onload = function(e) {
+
+          localStorage.setItem(
+            "profileImage",
+            e.target.result
+          );
+
+          document.getElementById("profileImage")
+            .src = e.target.result;
+        };
+
+        reader.readAsDataURL(file);
+      }
+    );
+  }
+
+});
+
+/* ---------------- SETTINGS ---------------- */
+
+function openSettings() {
+
+  hideAllPages();
+
+  document.getElementById("settingsPage")
+    .style.display = "flex";
+}
+
+function closeSettings() {
+
+  hideAllPages();
+
+  document.getElementById("cases")
+    .style.display = "flex";
+
+  updatePlayerStats();
+  renderCases();
+}
+
+function toggleLanguage() {
+
+  alert(
+    "🌐 سیستەمی Kurdish / English دواتر بە تەواوی چالاک دەکرێت."
+  );
+}
+
+/* ---------------- ACCOUNT ---------------- */
+
+function switchAccount() {
+
+  const confirmSwitch =
+    confirm(
+      "دڵنیایت دەتەوێت ئەکاونتەکەت بگۆڕیت؟"
+    );
+
+  if (!confirmSwitch) return;
+
+  logout();
+}
 
 function logout() {
 
   localStorage.removeItem("playerName");
-  localStorage.removeItem("playerXP");
+  localStorage.removeItem("playerPassword");
 
   playerName = "";
-  playerXP = 0;
 
+  hideAllPages();
 
-  document.getElementById("cases").style.display = "none";
-  document.getElementById("home").style.display = "flex";
-
+  document.getElementById("accountPage")
+    .style.display = "flex";
 }
-/* PROFILE IMAGE */
 
-document.getElementById("profileImage").addEventListener("change", function(event) {
+/* ---------------- START ---------------- */
 
-  const file = event.target.files[0];
+window.addEventListener("load", function() {
 
-  if (!file) return;
+  if (playerName) {
 
-  const reader = new FileReader();
+    document.getElementById("home")
+      .style.display = "none";
 
-  reader.onload = function(e) {
+  } else {
 
-    const imageData = e.target.result;
-
-    localStorage.setItem("profileImage", imageData);
-
-    document.getElementById("profilePreview").src = imageData;
-
-  };
-
-  reader.readAsDataURL(file);
+    document.getElementById("home")
+      .style.display = "flex";
+  }
 
 });
-function openCase2() {
-
-  document.getElementById("cases").style.display = "none";
-
-  document.getElementById("case2Page").style.display = "flex";
-
-}
-function showCase2Clue(number) {
-
-  const clueText =
-    document.getElementById("case2ClueText");
-
-  if (number === 1) {
-    clueText.innerText =
-      "🔎 بەڵگەی ١: لە پەنجەرەکەدا نیشانەی پەنجەمۆری ئاراس دۆزرایەوە.";
-  }
-
-  if (number === 2) {
-    clueText.innerText =
-      "🔎 بەڵگەی ٢: دیلان دەڵێت لە ئاشپەزخانە بووە، بەڵام چرای ئاشپەزخانە لەو کاتەدا کوژاوە بوو.";
-  }
-
-  if (number === 3) {
-    clueText.innerText =
-      "🔎 بەڵگەی ٣: لە حەوشەکەدا شوێنی پێیەک دۆزرایەوە کە بەرەو پەنجەرەی ماڵ دەچوو.";
-  }
-
-  if (number === 4) {
-    clueText.innerText =
-      "🧩 بەڵگەی ٤: کەمێک خاک لەسەر جلوبەرگی هێمن دۆزرایەوە، بەڵام ئەو دەڵێت هەموو شەوەکە لە حەوشە نەبووە.";
-  }
-
-}
-function solveCase2(answer) {
-
-  if (answer === "aras") {
-
-  if (!case2Solved) {
-
-    case2Solved = true;
-    localStorage.setItem("case2Solved", "true");
-
-    solvedCases = 2;
-    localStorage.setItem("solvedCases", solvedCases);
-
-    playerPoints += 100;
-    localStorage.setItem("playerPoints", playerPoints);
-
-    playerXP += 100;
-    localStorage.setItem("playerXP", playerXP);
-  }
-
-    document.getElementById("case2Page").style.display = "none";
-    document.getElementById("resultPage").style.display = "flex";
-
-    document.getElementById("resultTitle").innerText =
-      "🎉 دۆسیەی دووەم چارەسەر کرا!";
-
-    document.getElementById("resultText").innerText =
-      "پیرۆزە گەورەم بۆ چارەسەر کردنی دۆسیەکە 🫡🎉";
-
-    document.getElementById("finalXP").innerText =
-      playerXP;
-
-    document.getElementById("finalRank").innerText =
-      getRank();
-
-    updatePlayerStats();
-
-  } else {
-
-    playerPoints -= 50;
-
-    if (playerPoints < 0) {
-      playerPoints = 0;
-    }
-
-    localStorage.setItem("playerPoints", playerPoints);
-
-    document.getElementById("case2Page").style.display = "none";
-    document.getElementById("judgePage").style.display = "flex";
-
-    document.getElementById("judgeText").innerText =
-      "❌ وەڵامەکەت هەڵەیە!\nدادوەر بڕیاری دا 50 Points لێت کەم بکرێت. ⚖️";
-
-    document.getElementById("judgePoints").innerText =
-      playerPoints;
-
-  }
-
-}
-function openCase3() {
-
-  document.getElementById("cases").style.display = "none";
-
-  document.getElementById("case3Page").style.display = "flex";
-
-}
-function showCase3Clue(number) {
-
-  const clueText =
-    document.getElementById("case3ClueText");
-
-  if (number === 1) {
-    clueText.innerText =
-      "🔎 بەڵگەی ١: لەسەر دەستەکانی سارا پەنجەمۆری ڕۆنی دۆزرایەوە.";
-  }
-
-  if (number === 2) {
-    clueText.innerText =
-      "🔎 بەڵگەی ٢: کامێرای کۆگا پیشانی داوە ناز لە کاتی ونبوونەکەدا لە کۆگا بووە.";
-  }
-
-  if (number === 3) {
-    clueText.innerText =
-      "🔎 بەڵگەی ٣: رێباز دەڵێت لە دەرەوە بووە، بەڵام شوێنی پێی لە ناو بیناکە دۆزرایەوە.";
-  }
-
-  if (number === 4) {
-    clueText.innerText =
-      "🧩 بەڵگەی ٤: کلیلی شوێنی ئەڵماسەکە لە ژووری میوان دۆزرایەوە، شوێنێک کە سارا دەڵێت تێیدا بووە.";
-  }
-
-}
-function solveCase3(answer) {
-
-  if (answer === "sara") {
-
-    if (!case3Solved) {
-
-  case3Solved = true;
-  localStorage.setItem("case3Solved", "true");
-
-  solvedCases = 3;
-  localStorage.setItem("solvedCases", solvedCases);
-
-  playerPoints += 100;
-  localStorage.setItem("playerPoints", playerPoints);
-
-  playerXP += 100;
-  localStorage.setItem("playerXP", playerXP);
-}
-
-    document.getElementById("case3Page").style.display = "none";
-    document.getElementById("resultPage").style.display = "flex";
-
-    document.getElementById("resultTitle").innerText =
-      "🎉 دۆسیەی سێیەم چارەسەر کرا!";
-
-    document.getElementById("resultText").innerText =
-      "پیرۆزە گەورەم بۆ چارەسەر کردنی دۆسیەکە 🫡🎉";
-
-    document.getElementById("finalXP").innerText =
-      playerXP;
-
-    document.getElementById("finalRank").innerText =
-      getRank();
-
-    updatePlayerStats();
-
-  } else {
-
-    playerPoints -= 50;
-
-    if (playerPoints < 0) {
-      playerPoints = 0;
-    }
-
-    localStorage.setItem("playerPoints", playerPoints);
-
-    document.getElementById("case3Page").style.display = "none";
-    document.getElementById("judgePage").style.display = "flex";
-
-    document.getElementById("judgeText").innerText =
-      "❌ وەڵامەکەت هەڵەیە!\nدادوەر بڕیاری دا 50 Points لێت کەم بکرێت. ⚖️";
-
-    document.getElementById("judgePoints").innerText =
-      playerPoints;
-
-  }
-
-}

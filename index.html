@@ -1,370 +1,174 @@
 <!DOCTYPE html>
 <html lang="ku">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MR_LEKOLAR</title>
+  <title>MR_LEKOLAR 🕵️‍♂️</title>
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<div class="home" id="home">
-  <h1>MR_LEKOLAR</h1>
-  <p>بەخێربێیت، لێکۆڵەر 🕵️‍♂️</p>
-  <button onclick="startGame()">دەستپێکردنی یاری</button>
-</div>
+<!-- HOME -->
+<section id="home" class="page home">
+  <div class="overlay">
+    <h1>MR_LEKOLAR 🕵️‍♂️</h1>
+    <p>یارییەکی لێکۆڵینەوە و دۆزینەوە</p>
+    <button onclick="startGame()">دەست پێ بکە</button>
+  </div>
+</section>
 
-<div class="account" id="account">
-  <h2>دروستکردنی ئەکاونت</h2>
+<!-- ACCOUNT -->
+<section id="accountPage" class="page account-page">
+  <div class="box">
+    <h1>👤 دروستکردنی ئەکاونت</h1>
 
-  <input type="text" id="playerName" placeholder="ناوی لێکۆڵەر">
+    <input id="accountName" type="text" placeholder="ناوی لێکۆڵەر">
+    <input id="accountPassword" type="password" placeholder="وشەی نهێنی">
 
-  <input type="password" id="playerPassword" placeholder="وشەی نهێنی">
+    <button onclick="createAccount()">دروستکردنی ئەکاونت</button>
+  </div>
+</section>
 
-  <button onclick="createAccount()">دروستکردن</button>
-</div>
+<!-- CASES -->
+<section id="cases" class="page cases">
 
-<div class="cases" id="cases">
+  <header class="topbar">
+    <h1>MR_LEKOLAR 🕵️‍♂️</h1>
 
-  <h1>📁 دۆسیەکان</h1>
+    <div class="top-buttons">
+      <button onclick="openProfile()">👤 Profile</button>
+      <button onclick="openSettings()">⚙️ Settings</button>
+    </div>
+  </header>
 
-  <p id="welcomeText"></p>
-  <button onclick="openProfile()">👤 پرۆفایل</button>
-<button onclick="logout()">🚪 Logout</button>
+  <div class="welcome">
+    <h2 id="welcomeText">بەخێربێیت</h2>
 
-  <div class="stats">
-    <p>⭐ XP: <span id="xp">0</span></p>
-    <p>🎖️ پلە: <span id="rank">نوێکار</span></p>
+    <div class="stats">
+      <span>⭐ XP: <b id="xp">0</b></span>
+      <span>💰 Points: <b id="points">0</b></span>
+      <span>🏆 Rank: <b id="rank">نوێکار</b></span>
+    </div>
   </div>
 
-  <div class="case-card">
-    <h2>🔎 دۆسیەی یەکەم</h2>
+  <div id="caseList" class="case-list"></div>
 
-    <p>
-      مۆبایلێک لە ماڵێک ون بووە.
-      سێ کەس گومانلێکراون.
-    </p>
+  <footer>
+    <p>MR_LEKOLAR © 2026</p>
+    <p>🕵️‍♂️ Every case has a secret.</p>
+  </footer>
 
-    <button onclick="openCase()">
-      دەستکردن بە لێکۆڵینەوە
-    </button>
-  </div>
-  <div class="case-card locked-case" id="case2" data-case="2">
+</section>
 
-  <h2>🔒 دۆسیەی دووەم</h2>
+<!-- CASE PAGE -->
+<section id="casePage" class="page case-page">
 
-  <p>ئەم دۆسیەیە هێشتا قفڵە.</p>
+  <h1 id="caseTitle"></h1>
 
-  <button onclick="openCase2()">
-    🔒 قفڵە
-  </button>
-
-</div>
-<div class="case-card locked-case" id="case3" data-case="3">
-
-  <h2>🔒 دۆسیەی سێیەم</h2>
-
-  <p>ئەم دۆسیەیە هێشتا قفڵە.</p>
-
-  <button onclick="openCase3()">
-    🔒 قفڵە
-  </button>
-
-</div>
-
-</div>
-
-<div class="case-page" id="casePage">
-
-  <h1>🔎 دۆسیەی یەکەم</h1>
-
-  <h2>مۆبایلە ونبووەکە</h2>
-
-  <div class="story">
-    <p>
-      لە ماڵێک مۆبایلێکی گرنگ ون بووە.
-      لە کاتی ونبوونی مۆبایلەکە،
-      تەنها سێ کەس لە نزیک ماڵەکە بوون.
-    </p>
-  </div>
-
-  <h2>📋 گومانلێکراوەکان</h2>
+  <div class="story" id="caseStory"></div>
 
   <div class="suspects">
-
-    <div class="suspect">
-      <h3>👤 ئارام</h3>
-      <p>دەڵێت لە ژوورەکەدا نەبووە.</p>
-    </div>
-
-    <div class="suspect">
-      <h3>👤 کاروان</h3>
-      <p>دەڵێت لە دەرەوە بووە.</p>
-    </div>
-
-    <div class="suspect">
-      <h3>👤 سامان</h3>
-      <p>دەڵێت هیچ شتێکی نەبینیوە.</p>
-    </div>
-
+    <h2>👥 گومان‌لێکراوەکان</h2>
+    <div id="suspectList"></div>
   </div>
-
-  <h2>🧩 بەڵگەکان</h2>
 
   <div class="clues">
-
-    <button onclick="showClue(1)">بەڵگەی ١</button>
-
-    <button onclick="showClue(2)">بەڵگەی ٢</button>
-
-    <button onclick="showClue(3)">بەڵگەی ٣</button>
-
+    <h2>🔎 بەڵگەکان</h2>
+    <div id="clueList"></div>
   </div>
 
-  <p class="clue-text" id="clueText">
-    بەڵگەیەک هەڵبژێرە.
-  </p>
-
-  <h2>❓ تاوانبار کێیە؟</h2>
-
-  <div class="answers">
-
-    <button onclick="solveCase('aram')">ئارام</button>
-
-    <button onclick="solveCase('karwan')">کاروان</button>
-
-    <button onclick="solveCase('saman')">سامان</button>
-
-  </div>
+  <div class="answers" id="answerList"></div>
 
   <button class="back-button" onclick="backToCases()">
     ← گەڕانەوە بۆ دۆسیەکان
   </button>
 
-</div>
-<div class="case-page" id="case2Page">
+</section>
 
-  <h1>🔎 دۆسیەی دووەم</h1>
+<!-- RESULT -->
+<section id="resultPage" class="page result-page">
 
-  <h2>💎 دۆسیەی ونبوونی زێڕەکە</h2>
-
-<div class="story">
-  <p>
-    لە شەوێکی بارانیدا، زێڕێکی بە نرخ لە ماڵی بازرگانێکی ناسراو ون بووە.
-    دەرگای ماڵەکە داخراو بوو و هیچ نیشانەی شکاندنی دەرگا نەبوو.
-  </p>
-
-  <p>
-    لەو شەوەدا تەنها سێ کەس لە ماڵەکە بوون:
-    ئاراس، دیلان و هێمن.
-  </p>
-</div>
-
-<h2>📋 گومانلێکراوەکان</h2>
-
-<div class="suspects">
-
-  <div class="suspect">
-    <h3>👤 ئاراس</h3>
-    <p>دەڵێت لە ژووری خۆی بووە و هیچ نەبینیوە.</p>
-  </div>
-
-  <div class="suspect">
-    <h3>👤 دیلان</h3>
-    <p>دەڵێت لە ئاشپەزخانە بووە و دەستی بە هیچ شتێک نەگەیشتووە.</p>
-  </div>
-
-  <div class="suspect">
-    <h3>👤 هێمن</h3>
-    <p>دەڵێت لە حەوشە بووە و تاوانبارەکەی نەدیوە.</p>
-  </div>
-
-</div>
-<h2>🧩 بەڵگەکان</h2>
-
-<div class="clues">
-
-  <button onclick="showCase2Clue(1)">بەڵگەی ١</button>
-
-  <button onclick="showCase2Clue(2)">بەڵگەی ٢</button>
-
-  <button onclick="showCase2Clue(3)">بەڵگەی ٣</button>
-
-  <button onclick="showCase2Clue(4)">بەڵگەی ٤</button>
-
-</div>
-
-<p class="clue-text" id="case2ClueText">
-  بەڵگەیەک هەڵبژێرە.
-</p>
-<h2>❓ تاوانبار کێیە؟</h2>
-
-<div class="answers">
-
-  <button onclick="solveCase2('aras')">
-    ئاراس
-  </button>
-
-  <button onclick="solveCase2('dilan')">
-    دیلان
-  </button>
-
-  <button onclick="solveCase2('hemin')">
-    هێمن
-  </button>
-
-</div>
-
-  <button class="back-button" onclick="backToCases()">
-    ← گەڕانەوە بۆ دۆسیەکان
-  </button>
-
-  </div>
-  
-  <div class="case-page" id="case3Page">
-
-  <h1>🔎 دۆسیەی سێیەم</h1>
-
-  <h2>💍 دۆسیەی ونبوونی ئەڵماسەکە</h2>
-
-  <div class="story">
-
-    <p>
-      ئەڵماسێکی زۆر بە نرخ لە شوێنێکی تایبەت ون بووە.
-      دەرگا داخراوە و هیچ نیشانەی شکاندن نییە.
-    </p>
-
-    <p>
-      لە کاتی ونبوونی ئەڵماسەکەدا تەنها سێ کەس لە شوێنەکە بوون:
-      سارا، ناز و رێباز.
-    </p>
-
-  </div>
-
-  <h2>📋 گومانلێکراوەکان</h2>
-
-  <div class="suspects">
-
-    <div class="suspect">
-      <h3>👤 سارا</h3>
-      <p>دەڵێت لە ژووری میوان بووە.</p>
-    </div>
-
-    <div class="suspect">
-      <h3>👤 ناز</h3>
-      <p>دەڵێت لە کۆگا بووە.</p>
-    </div>
-
-    <div class="suspect">
-      <h3>👤 رێباز</h3>
-      <p>دەڵێت لە دەرەوەی بیناکە بووە.</p>
-    </div>
-
-  </div>
-
-  <h2>🧩 بەڵگەکان</h2>
-
-  <div class="clues">
-
-    <button onclick="showCase3Clue(1)">بەڵگەی ١</button>
-    <button onclick="showCase3Clue(2)">بەڵگەی ٢</button>
-    <button onclick="showCase3Clue(3)">بەڵگەی ٣</button>
-    <button onclick="showCase3Clue(4)">بەڵگەی ٤</button>
-
-  </div>
-
-  <p class="clue-text" id="case3ClueText">
-    بەڵگەیەک هەڵبژێرە.
-  </p>
-
-  <h2>❓ تاوانبار کێیە؟</h2>
-
-  <div class="answers">
-
-    <button onclick="solveCase3('sara')">
-      سارا
-    </button>
-
-    <button onclick="solveCase3('naz')">
-      ناز
-    </button>
-
-    <button onclick="solveCase3('rebaz')">
-      رێباز
-    </button>
-
-  </div>
-
-  <button class="back-button" onclick="backToCases()">
-    ← گەڕانەوە بۆ دۆسیەکان
-  </button>
-
-</div>
-<div class="result-page" id="resultPage">
-
-  <h1 id="resultTitle"></h1>
+  <h1 id="resultTitle">🎉</h1>
 
   <p id="resultText"></p>
 
   <div class="result-stats">
-    <p>⭐ XP: <span id="finalXP">0</span></p>
-    <p>🎖️ پلە: <span id="finalRank">نوێکار</span></p>
+    <p>⭐ XP: <b id="finalXP">0</b></p>
+    <p>💰 Points: <b id="finalPoints">0</b></p>
+    <p>🏆 Rank: <b id="finalRank">نوێکار</b></p>
   </div>
 
-  <button onclick="backToCases()">
-    گەڕانەوە بۆ دۆسیەکان
-  </button>
+  <button onclick="backToCases()">گەڕانەوە بۆ دۆسیەکان</button>
 
-</div>
-<div class="judge-page" id="judgePage">
+</section>
+
+<!-- JUDGE -->
+<section id="judgePage" class="page judge-page">
 
   <h1>⚖️ دادوەر</h1>
 
   <p id="judgeText"></p>
 
-  <p>💰 Points: <span id="judgePoints">0</span></p>
+  <div class="result-stats">
+    <p>💰 Points ـی ئێستا:</p>
+    <h2 id="judgePoints">0</h2>
+  </div>
 
-  <button onclick="backToCases()">
-    گەڕانەوە بۆ دۆسیەکان
-  </button>
+  <button onclick="backToCases()">گەڕانەوە</button>
 
-</div>
-<div class="profile-page" id="profilePage">
-  <input type="file" id="profileImage" accept="image/*">
-  <img id="profilePreview" src="" alt="Profile Picture" style="width:120px;height:120px;border-radius:50%;object-fit:cover;">
+</section>
 
-  <h1>👤 پرۆفایلی لێکۆڵەر</h1>
-  <div class="profile-stats">
+<!-- PROFILE -->
+<section id="profilePage" class="page profile-page">
 
-  <p>👤 ناو: <span id="profileName"></span></p>
+  <div class="profile-box">
 
-  <p>⭐ XP: <span id="profileXP">0</span></p>
+    <h1>👤 Profile</h1>
 
-  <p>💰 Points: <span id="profilePoints">0</span></p>
+    <div class="avatar-container">
+      <img id="profileImage" src="" alt="Profile">
+    </div>
 
-  <p>🎖️ پلە: <span id="profileRank">نوێکار</span></p>
+    <input type="file" id="profileImageInput" accept="image/*">
 
-  <p>📁 دۆسیە چارەسەرکراوەکان: <span id="solvedCases">0</span></p>
+    <input id="profileNameInput" type="text" placeholder="ناوی لێکۆڵەر">
 
-</div>
+    <button onclick="saveProfile()">💾 Save Profile</button>
 
-  <input
-    type="text"
-    id="newPlayerName"
-    placeholder="ناوی نوێ"
-  >
+    <div class="profile-stats">
+      <p>⭐ XP: <b id="profileXP">0</b></p>
+      <p>💰 Points: <b id="profilePoints">0</b></p>
+      <p>🏆 Rank: <b id="profileRank">نوێکار</b></p>
+      <p>🔎 Solved Cases: <b id="profileSolved">0</b></p>
+    </div>
 
-  <button onclick="saveProfile()">
-    پاشەکەوتکردن
-  </button>
+    <button onclick="closeProfile()">← گەڕانەوە</button>
 
-  <button onclick="closeProfile()">
-    ← گەڕانەوە
-  </button>
+  </div>
 
-</div>
+</section>
+
+<!-- SETTINGS -->
+<section id="settingsPage" class="page settings-page">
+
+  <div class="settings-box">
+
+    <h1>⚙️ Settings</h1>
+
+    <button onclick="toggleLanguage()">🌐 Kurdish / English</button>
+
+    <button onclick="openProfile()">👤 Profile</button>
+
+    <button onclick="switchAccount()">🔄 Switch Account</button>
+
+    <button class="danger" onclick="logout()">🚪 Log out</button>
+
+    <button onclick="closeSettings()">← گەڕانەوە</button>
+
+  </div>
+
+</section>
 
 <script src="script.js"></script>
 
