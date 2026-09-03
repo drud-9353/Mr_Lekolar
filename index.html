@@ -66,6 +66,8 @@
 
   <h1 id="caseTitle"></h1>
 
+  <p id="caseNumber"></p>
+
   <div class="story" id="caseStory"></div>
 
   <div class="suspects">
@@ -77,6 +79,25 @@
     <h2>🔎 بەڵگەکان</h2>
     <div id="clueList"></div>
   </div>
+
+  <div class="case-section">
+  <h2>💬 گفتوگۆ لەگەڵ گومان‌لێکراو</h2>
+
+  <div id="chatBox" class="chat-box">
+    <p class="chat-empty">
+      گومان‌لێکراو هەڵبژێرە بۆ دەستپێکردنی گفتوگۆ.
+    </p>
+  </div>
+
+  <div class="chat-input-row">
+    <input
+      id="chatInput"
+      type="text"
+      placeholder="پرسیارەکەت بنووسە..."
+    >
+    <button onclick="sendMessage()">ناردن</button>
+  </div>
+</div>
 
   <div class="answers" id="answerList"></div>
 
