@@ -773,7 +773,7 @@ function showCases() {
 
   if (welcome) {
     welcome.innerText =
-      "بەخێربێیت " + playerName + " 🕵️‍♂️";
+    "بەخێربێیت لێکۆڵەر" + playerName + " 🕵️‍♂️";
   }
 
   updatePlayerStats();
